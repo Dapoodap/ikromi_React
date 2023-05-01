@@ -4,14 +4,17 @@ import axios from "axios";
 // import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
+const API = process.env.REACT_APP_API;
 function Login() {
   // const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // const key = "https://km4-challenge-5-api.up.railway.app/api"
 
   const onSubmit = async (e) => {
     e.preventDefault();
+    console.log(API)
 
     try {
       let data = JSON.stringify({
@@ -21,7 +24,7 @@ function Login() {
 
       let config = {
         method: "post",
-        url: `${process.env.REACT_APP_API}/v1/auth/login`,
+        url: `https://km4-challenge-5-api.up.railway.app/api/v1/auth/login`,
         headers: {
           "Content-Type": "application/json",
         },

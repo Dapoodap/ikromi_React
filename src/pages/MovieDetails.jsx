@@ -4,10 +4,12 @@ import { getAllMovieDetail } from "../api";
 import { Col, Container, Row } from "react-bootstrap";
 import ButtonLogin from "../components/ButtonLogin";
 import ButtonRegis from "../components/ButtonRegis";
+import { useNavigate } from "react-router-dom/dist";
 
 function MovieDetails() {
   const { id } = useParams();
   const [detailMovie, setdetailMovie] = useState([]);
+  const nav = useNavigate()
 
   // Genre
   const [movieGenre, setmovieGenre] = useState([]);
@@ -18,6 +20,15 @@ function MovieDetails() {
       setmovieGenre(result.genres);
     });
   }, [id]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   const MovieDetail = () => {
     return [detailMovie].map((movie) => {
@@ -53,8 +64,29 @@ function MovieDetails() {
                   alignItems: "start",
                 }}
               >
-                <ButtonLogin />
-                <ButtonRegis />
+                {isLoggedIn ? (
+              <>
+                <div onClick={() => {
+            nav(`/users/dashboard`);
+          }}>
+                  dasboard
+                </div>
+                <div
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    setIsLoggedIn(false);
+                    return nav("/");
+                  }}
+                >
+                  Logout
+                </div>
+              </>
+            ) : (
+              <>
+                <ButtonLogin/>
+                <ButtonRegis/>
+              </>
+            )}
               </Col>
             </Row>
             <Row>

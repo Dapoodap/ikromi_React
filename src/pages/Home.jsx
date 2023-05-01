@@ -10,6 +10,7 @@ import backgroundImage from "../styles/image.jpg";
 import { useEffect, useState } from "react";
 import { getMoviePopularList, searchMovie } from "../api";
 import { useNavigate } from "react-router-dom";
+// import Header from "../components/Header";
 
 const Home = () => {
   const nav = useNavigate();
@@ -47,7 +48,15 @@ const Home = () => {
       );
     });
   };
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
   return (
     <>
       <div
@@ -56,6 +65,7 @@ const Home = () => {
           backgroundSize: "cover",
         }}
       >
+        {/* <Header/> */}
         <Container
           style={{
             minHeight: "600px",
@@ -63,7 +73,9 @@ const Home = () => {
         >
           <Row>
             <Col className="mt-1">
-              <h1 style={{ color: "red", fontSize: "50px" }}>Movielist</h1>
+            <h1 onClick={() => {
+            nav(`/`);
+          }}  style={{cursor:"pointer", color: "red", fontSize: "50px" }}>Movielist</h1>
             </Col>
             <Col className="mt-3">
               <input
@@ -72,17 +84,33 @@ const Home = () => {
                 onChange={({ target }) => search(target.value)}
               />
             </Col>
-            <Col
-              className="mt-3"
-              style={{
-                display: "flex",
-                justifyContent: "end",
-                alignItems: "start",
-              }}
-            >
-              <ButtonLogin />
-              <ButtonRegis />
-            </Col>
+              <Col
+                className="mt-3"
+              >
+                {isLoggedIn ? (
+              <>
+                <div onClick={() => {
+            nav(`/users/dashboard`);
+          }}>
+                  dasboard
+                </div>
+                <div
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    setIsLoggedIn(false);
+                    return nav("/");
+                  }}
+                >
+                  Logout
+                </div>
+              </>
+            ) : (
+              <>
+                <ButtonLogin/>
+                <ButtonRegis/>
+              </>
+            )}
+              </Col>
           </Row>
 
           <Row>
